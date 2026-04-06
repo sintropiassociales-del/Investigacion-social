@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Únete — Sintropía Social</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--m:#5B21D4;--md:#3d14a0;--ml:#7c4de8;--n:#FF6B1A;--nl:#ff8c4a;--w:#fff;--gc:#f5f3ff;--gt:#4a4458;--gb:#e0d9f7}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--gc);color:var(--gt);min-height:100vh}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:15px 48px;background:rgba(255,255,255,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--gb)}
+.nl{display:flex;align-items:center;gap:11px;text-decoration:none}
+.nlc{width:38px;height:38px;background:var(--m);border-radius:50%;box-shadow:0 0 0 3px #fff,0 0 0 5px var(--ml)}
+.nlt{font-family:'Playfair Display',serif;font-size:1rem;color:var(--n);letter-spacing:.08em;font-weight:700}
+.navr{display:flex;gap:24px;align-items:center}
+.navr a{text-decoration:none;font-size:.86rem;font-weight:500;color:var(--gt);transition:color .2s}
+.navr a:hover{color:var(--m)}
+.page{min-height:100vh;display:flex;padding-top:74px}
+.pl{width:390px;min-width:290px;background:var(--m);padding:68px 44px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.pl::before{content:'';position:absolute;width:460px;height:460px;border-radius:50%;border:65px solid rgba(255,255,255,.05);top:-130px;right:-130px}
+.pl::after{content:'';position:absolute;width:270px;height:270px;border-radius:50%;border:48px solid rgba(255,107,26,.12);bottom:-65px;left:-65px}
+.plc{position:relative;z-index:1}
+.pbdg{display:inline-block;background:rgba(255,107,26,.2);color:var(--nl);font-size:.69rem;letter-spacing:.12em;text-transform:uppercase;padding:5px 12px;border-radius:50px;margin-bottom:26px;font-weight:600}
+.pl h2{font-family:'Playfair Display',serif;font-size:2.1rem;font-weight:900;color:#fff;line-height:1.2;margin-bottom:16px}
+.pl h2 em{color:var(--n);font-style:italic}
+.pl .desc{color:rgba(255,255,255,.74);font-size:.91rem;line-height:1.7;margin-bottom:32px}
+.bls{list-style:none;display:flex;flex-direction:column;gap:13px}
+.bi{display:flex;align-items:flex-start;gap:10px;color:rgba(255,255,255,.84);font-size:.87rem;line-height:1.5}
+.bic{width:25px;height:25px;min-width:25px;background:rgba(255,107,26,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.76rem}
+.pr{flex:1;padding:52px 68px;display:flex;align-items:center;justify-content:center}
+.fc{max-width:490px;width:100%}
+.fc h3{font-family:'Playfair Display',serif;font-size:1.85rem;font-weight:700;color:#1a0f33;margin-bottom:5px}
+.sub{color:#888;font-size:.87rem;margin-bottom:34px}
+.fr2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.campo{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.campo label{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--m)}
+.campo input,.campo select,.campo textarea{padding:11px 13px;border:1.5px solid var(--gb);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.89rem;color:var(--gt);background:#fff;transition:border-color .2s,box-shadow .2s;outline:none;-webkit-appearance:none}
+.campo input:focus,.campo select:focus,.campo textarea:focus{border-color:var(--m);box-shadow:0 0 0 3px rgba(91,33,212,.1)}
+.campo textarea{resize:vertical;min-height:74px}
+.cerr{border-color:#ef4444!important;box-shadow:0 0 0 3px rgba(239,68,68,.1)!important}
+.cmsg{font-size:.75rem;color:#ef4444;margin-top:3px;display:none}
+.cmsg.show{display:block}
+.cck{display:flex;align-items:flex-start;gap:9px;font-size:.83rem;color:var(--gt);line-height:1.4;margin-bottom:20px}
+.cck input[type=checkbox]{width:16px;height:16px;min-width:16px;accent-color:var(--m);margin-top:2px;cursor:pointer}
+.bsub{width:100%;background:var(--m);color:#fff;padding:13px 20px;border-radius:10px;border:none;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .25s;box-shadow:0 8px 22px rgba(91,33,212,.28);position:relative}
+.bsub:hover{background:var(--md);transform:translateY(-2px)}
+.bsub:disabled{background:#aaa;transform:none;cursor:not-allowed}
+.fft{text-align:center;margin-top:18px;font-size:.83rem;color:#888}
+.fft a{color:var(--m);text-decoration:none;font-weight:500}
+.suc{display:none;text-align:center;padding:52px 16px}
+.suco{width:68px;height:68px;background:rgba(91,33,212,.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto 16px}
+.suc h3{font-family:'Playfair Display',serif;font-size:1.65rem;color:#1a0f33;margin-bottom:10px}
+.suc p{color:#888;font-size:.91rem;line-height:1.6;margin-bottom:22px}
+.bp{background:var(--m);color:#fff;padding:11px 24px;border-radius:50px;text-decoration:none;font-weight:500;font-size:.91rem;display:inline-block;box-shadow:0 8px 22px rgba(91,33,212,.28)}
+.bp:hover{background:var(--md)}
+@media(max-width:980px){.pl{display:none}.pr{padding:52px 20px}}
+@media(max-width:560px){nav{padding:12px 16px}.fr2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nl" href="index.html"><div class="nlc"></div><span class="nlt">SINTROPÍA SOCIAL</span></a>
+  <div class="navr">
+    <a href="index.html">Inicio</a>
+    <a href="index.html#repo">Repositorio</a>
+    <a href="contribuir.html">Contribuir</a>
+    <a href="mailto:contacto@sintropiasocial.com">Contacto</a>
+  </div>
+</nav>
+<div class="page">
+  <div class="pl">
+    <div class="plc">
+      <div class="pbdg">Comunidad abierta · Gratis</div>
+      <h2>Sé parte de la <em>red</em></h2>
+      <p class="desc">Únete a investigadores, estudiantes y lectores que construimos conocimiento social de forma colectiva.</p>
+      <ul class="bls">
+        <li class="bi"><div class="bic">📚</div><span>Acceso completo a 836+ citas sistematizadas</span></li>
+        <li class="bi"><div class="bic">🔍</div><span>Filtros por categoría, indicador, autor y año</span></li>
+        <li class="bi"><div class="bic">📋</div><span>Genera y copia citas APA automáticamente</span></li>
+        <li class="bi"><div class="bic">⬇</div><span>Descarga selecciones filtradas en CSV · $18 MXN</span></li>
+        <li class="bi"><div class="bic">✍️</div><span>Contribuye con tus propias citas</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="pr">
+    <div class="fc">
+      <div id="fwrap">
+        <h3>Crear cuenta</h3>
+        <p class="sub">Es gratis. Sin compromisos. Solo conocimiento.</p>
+        <form id="rform" onsubmit="enviar(event)" novalidate>
+          <div class="fr2">
+            <div class="campo">
+              <label>Nombre *</label>
+              <input type="text" id="r-nom" placeholder="María" required/>
+            </div>
+            <div class="campo">
+              <label>Apellido *</label>
+              <input type="text" id="r-ape" placeholder="González" required/>
+            </div>
+          </div>
+          <div class="campo">
+            <label>Correo electrónico *</label>
+            <input type="email" id="r-email" placeholder="maria@universidad.edu.mx" required/>
+            <span class="cmsg" id="email-err">Este correo ya está registrado.</span>
+          </div>
+          <div class="campo">
+            <label>Contraseña *</label>
+            <input type="password" id="r-pass" placeholder="Mínimo 8 caracteres" required minlength="8"/>
+          </div>
+          <div class="campo">
+            <label>Institución / Organización</label>
+            <input type="text" id="r-inst" placeholder="Universidad, empresa, independiente…"/>
+          </div>
+          <div class="campo">
+            <label>Área de interés *</label>
+            <select id="r-area" required>
+              <option value="">Seleccionar…</option>
+              <option>Sociología</option><option>Psicología Social</option><option>Antropología</option>
+              <option>Educación</option><option>Economía Social</option><option>Ciencias Políticas</option>
+              <option>Trabajo Social</option><option>Comunicación</option><option>Historia</option>
+              <option>Virtualidad / Tecnología</option><option>Investigación Social</option><option>Otra</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label>¿Por qué quieres unirte? (opcional)</label>
+            <textarea id="r-mot" placeholder="Cuéntanos brevemente…"></textarea>
+          </div>
+          <div class="cck">
+            <input type="checkbox" id="r-ter" required/>
+            <label for="r-ter">Acepto que mis contribuciones serán públicas. He leído la <a href="#" style="color:var(--m)">política de privacidad</a>.</label>
+          </div>
+          <button type="submit" class="bsub" id="bsub">Crear mi cuenta →</button>
+        </form>
+        <div class="fft">¿Dudas? <a href="mailto:contacto@sintropiasocial.com">contacto@sintropiasocial.com</a><br><br>¿Ya tienes cuenta? <a href="index.html#repo">Ir al repositorio →</a></div>
+      </div>
+      <div class="suc" id="suc">
+        <div class="suco">✓</div>
+        <h3>¡Bienvenida a la comunidad!</h3>
+        <p>Tu cuenta fue creada. Ya puedes explorar las 836+ citas completas y contribuir con las tuyas.</p>
+        <a href="index.html" class="bp">Ir al repositorio →</a>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="config.js"></script>
+<script>
+async function enviar(e) {
+  e.preventDefault();
+  const btn = document.getElementById('bsub');
+  btn.disabled = true; btn.textContent = 'Creando cuenta…';
+  document.getElementById('email-err').classList.remove('show');
+
+  const pass = document.getElementById('r-pass').value;
+  const passHash = await sha256(pass);
+
+  const r = await api('registrarUsuario', {
+    nombre:      document.getElementById('r-nom').value,
+    apellido:    document.getElementById('r-ape').value,
+    email:       document.getElementById('r-email').value,
+    passHash,
+    institucion: document.getElementById('r-inst').value,
+    area:        document.getElementById('r-area').value,
+    motivo:      document.getElementById('r-mot').value,
+  });
+
+  if (r.ok) {
+    Auth.setUser({ id: r.id, nombre: document.getElementById('r-nom').value,
+      apellido: document.getElementById('r-ape').value,
+      email: document.getElementById('r-email').value });
+    document.getElementById('fwrap').style.display = 'none';
+    document.getElementById('suc').style.display = 'block';
+  } else {
+    if (r.error?.includes('registrado')) {
+      document.getElementById('email-err').classList.add('show');
+      document.getElementById('r-email').classList.add('cerr');
+    } else {
+      alert('Error: ' + (r.error || 'Inténtalo de nuevo'));
+    }
+    btn.disabled = false; btn.textContent = 'Crear mi cuenta →';
+  }
+}
+</script>
+</body>
+</html>
