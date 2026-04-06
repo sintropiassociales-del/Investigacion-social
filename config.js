@@ -6,7 +6,7 @@
 
 const CONFIG = {
   // ⬇ REEMPLAZA ESTA URL con la de tu Apps Script desplegado
-  API_URL: https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbxnBy1DKH14oWGEnzFHLDrD0XlgshVkBJrCL5b7zp8XKO0hmE4xriXEDXU9PZZl5KzovQ/exec/exec,
+  API_URL: https://script.google.com/macros/s/AKfycbxnBy1DKH14oWGEnzFHLDrD0XlgshVkBJrCL5b7zp8XKO0hmE4xriXEDXU9PZZl5KzovQ/exec/exec,
 
   SHEET_ID: '114sl6Mt-UhQQsv7zyicAAmsYzo3VDPoAvbT-0MakK94',
 
