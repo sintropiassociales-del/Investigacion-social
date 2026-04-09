@@ -1,469 +1,863 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Admin — Sintropía Social</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
-<style>
-:root{--m:#5B21D4;--md:#3d14a0;--ml:#7c4de8;--n:#FF6B1A;--nl:#ff8c4a;--w:#fff;--gc:#f5f3ff;--gt:#4a4458;--gb:#e0d9f7;--sh:0 4px 24px rgba(91,33,212,.11)}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'DM Sans',sans-serif;background:var(--gc);color:var(--gt);min-height:100vh}
-/* LOGIN */
-#login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--m) 0%,var(--ml) 100%)}
-.lbox{background:#fff;border-radius:20px;padding:48px 40px;max-width:400px;width:92%;box-shadow:0 32px 80px rgba(0,0,0,.2);text-align:center}
-.lbox .logo{width:56px;height:56px;background:var(--m);border-radius:50%;margin:0 auto 20px;box-shadow:0 0 0 8px rgba(91,33,212,.15)}
-.lbox h2{font-family:'Playfair Display',serif;font-size:1.7rem;color:#1a0f33;margin-bottom:4px}
-.lbox p{color:#888;font-size:.87rem;margin-bottom:28px}
-.campo{display:flex;flex-direction:column;gap:5px;margin-bottom:15px;text-align:left}
-.campo label{font-size:.71rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--m)}
-.campo input{padding:11px 13px;border:1.5px solid var(--gb);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.89rem;color:var(--gt);background:#fff;outline:none;transition:border-color .2s,box-shadow .2s}
-.campo input:focus{border-color:var(--m);box-shadow:0 0 0 3px rgba(91,33,212,.1)}
-.blin{width:100%;background:var(--m);color:#fff;padding:13px;border-radius:10px;border:none;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .25s;margin-top:6px}
-.blin:hover{background:var(--md)}
-.lerr{color:#ef4444;font-size:.82rem;margin-top:8px;display:none}
-.lerr.show{display:block}
-/* ADMIN LAYOUT */
-#admin-screen{display:none;min-height:100vh}
-.aside{position:fixed;top:0;left:0;width:240px;height:100vh;background:#1a0f33;padding:28px 20px;display:flex;flex-direction:column;gap:6px;z-index:100}
-.aside-logo{font-family:'Playfair Display',serif;color:var(--n);font-size:.95rem;letter-spacing:.08em;font-weight:700;margin-bottom:28px;padding-bottom:18px;border-bottom:1px solid rgba(255,255,255,.1)}
-.aside-logo span{display:block;font-size:.7rem;color:rgba(255,255,255,.4);letter-spacing:.1em;text-transform:uppercase;font-family:'DM Sans',sans-serif;margin-top:3px}
-.nav-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;cursor:pointer;color:rgba(255,255,255,.65);font-size:.86rem;font-weight:500;transition:all .2s;border:none;background:none;font-family:'DM Sans',sans-serif;width:100%;text-align:left}
-.nav-item:hover{background:rgba(255,255,255,.08);color:#fff}
-.nav-item.active{background:rgba(91,33,212,.6);color:#fff}
-.nav-item .ico{width:20px;text-align:center;font-size:.9rem}
-.aside-foot{margin-top:auto;padding-top:18px;border-top:1px solid rgba(255,255,255,.1)}
-.main{margin-left:240px;padding:36px 40px;min-height:100vh}
-.page-title{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:#1a0f33;margin-bottom:4px}
-.page-sub{color:#888;font-size:.88rem;margin-bottom:28px}
-/* STATS CARDS */
-.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
-.sc{background:#fff;border-radius:14px;padding:22px;box-shadow:var(--sh);border:1px solid var(--gb)}
-.sc-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--m)}
-.sc-lbl{font-size:.77rem;color:#888;text-transform:uppercase;letter-spacing:.06em}
-.sc-icon{font-size:1.4rem;margin-bottom:6px}
-/* TABLES */
-.card{background:#fff;border-radius:14px;padding:24px;box-shadow:var(--sh);border:1px solid var(--gb);margin-bottom:24px}
-.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
-.card-head h3{font-family:'Playfair Display',serif;font-size:1.2rem;color:#1a0f33}
-.badge{display:inline-block;padding:3px 10px;border-radius:50px;font-size:.72rem;font-weight:600}
-.bg-pend{background:rgba(255,107,26,.12);color:var(--n)}
-.bg-ok{background:rgba(34,197,94,.12);color:#16a34a}
-.bg-no{background:rgba(239,68,68,.1);color:#dc2626}
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:.84rem}
-th{text-align:left;padding:9px 12px;font-size:.71rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--m);border-bottom:2px solid var(--gb);white-space:nowrap}
-td{padding:10px 12px;border-bottom:1px solid var(--gb);vertical-align:top;max-width:280px;word-break:break-word;line-height:1.4}
-tr:last-child td{border-bottom:none}
-tr:hover td{background:var(--gc)}
-.btn-sm{padding:5px 11px;border-radius:6px;border:none;font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
-.btn-edit{background:rgba(91,33,212,.1);color:var(--m)}
-.btn-edit:hover{background:var(--m);color:#fff}
-.btn-del{background:rgba(239,68,68,.1);color:#dc2626}
-.btn-del:hover{background:#dc2626;color:#fff}
-.btn-ok{background:rgba(34,197,94,.12);color:#16a34a}
-.btn-ok:hover{background:#16a34a;color:#fff}
-.btn-pass{background:rgba(255,107,26,.12);color:var(--n)}
-.btn-pass:hover{background:var(--n);color:#fff}
-.empty{text-align:center;padding:32px;color:#aaa;font-size:.9rem}
-/* MODAL EDIT */
-.mbg{display:none;position:fixed;inset:0;z-index:500;background:rgba(26,15,51,.78);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px}
-.mbg.show{display:flex}
-.mbox{background:#fff;border-radius:18px;padding:36px 32px;max-width:640px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 32px 80px rgba(91,33,212,.28)}
-.mbox h3{font-family:'Playfair Display',serif;font-size:1.5rem;color:#1a0f33;margin-bottom:18px}
-.mfr2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
-.mfr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px}
-.campo-m{display:flex;flex-direction:column;gap:5px;margin-bottom:13px}
-.campo-m label{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--m)}
-.campo-m input,.campo-m select,.campo-m textarea{padding:10px 12px;border:1.5px solid var(--gb);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:.87rem;color:var(--gt);background:#fff;outline:none;transition:border-color .2s}
-.campo-m input:focus,.campo-m select:focus,.campo-m textarea:focus{border-color:var(--m)}
-.campo-m textarea{resize:vertical;min-height:80px}
-.mbtns{display:flex;gap:10px;margin-top:18px;justify-content:flex-end;flex-wrap:wrap}
-.btn-prim{background:var(--m);color:#fff;padding:10px 22px;border-radius:9px;border:none;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s}
-.btn-prim:hover{background:var(--md)}
-.btn-sec{background:none;color:var(--gt);padding:10px 20px;border-radius:9px;border:1.5px solid var(--gb);font-family:'DM Sans',sans-serif;font-size:.88rem;cursor:pointer;transition:all .2s}
-.btn-sec:hover{border-color:var(--m);color:var(--m)}
-/* TOAST */
-.toast{position:fixed;bottom:22px;right:22px;background:#1a0f33;color:#fff;padding:11px 18px;border-radius:9px;font-size:.85rem;z-index:999;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none}
-.toast.show{opacity:1;transform:translateY(0)}
-.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle;margin-right:6px}
-@keyframes sp{to{transform:rotate(360deg)}}
-@media(max-width:900px){.aside{display:none}.main{margin-left:0;padding:20px}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Sintropía Social</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #7B68EE;
+      --primary-light: #9683f0;
+      --accent: #E8732C;
+      --bg: #faf9f7;
+      --bg-alt: #f0efe9;
+      --text: #2c2c2c;
+      --text-light: #666;
+      --white: #fff;
+      --border: #e0ddd5;
+      --success: #28a745;
+      --error: #dc3545;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    
+    /* Login Form */
+    .login-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .login-box {
+      background: var(--white);
+      padding: 3rem;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+    .login-box h2 {
+      font-family: 'Playfair Display', serif;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+    .login-box p {
+      color: var(--text-light);
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      margin-bottom: 0.5rem;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .btn {
+      display: inline-block;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      width: 100%;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: var(--white);
+    }
+    .btn-primary:hover { background: var(--primary-light); }
+    .btn-primary:disabled {
+      background: var(--text-light);
+      cursor: not-allowed;
+    }
+    .error-msg {
+      background: #fee;
+      color: var(--error);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      display: none;
+    }
+    .error-msg.show { display: block; }
+    .hint {
+      background: var(--bg-alt);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 1.5rem;
+      font-size: 0.85rem;
+    }
+    .hint strong { color: var(--primary); }
+
+    /* Admin Panel */
+    .admin-panel { display: none; }
+    .admin-panel.active { display: block; }
+    
+    .admin-header {
+      background: var(--primary);
+      color: var(--white);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .admin-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+    }
+    .admin-nav {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .admin-nav a {
+      color: var(--white);
+      text-decoration: none;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+    .admin-nav a:hover { opacity: 1; }
+    .btn-logout {
+      background: rgba(255,255,255,0.2);
+      color: var(--white);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .admin-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 0;
+    }
+    .tab {
+      padding: 1rem 1.5rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+      color: var(--text-light);
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s;
+    }
+    .tab:hover { color: var(--primary); }
+    .tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      font-weight: 600;
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Stats Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--white);
+      padding: 1.5rem;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+    .stat-card .icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    .stat-card .value {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--primary);
+    }
+    .stat-card .label {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    /* Tables */
+    .data-table {
+      width: 100%;
+      background: var(--white);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .data-table th,
+    .data-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table th {
+      background: var(--bg-alt);
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+    .data-table tr:hover { background: var(--bg); }
+    
+    .action-btn {
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.8rem;
+      margin-right: 0.3rem;
+      transition: all 0.2s;
+    }
+    .btn-approve { background: var(--success); color: white; }
+    .btn-reject { background: var(--error); color: white; }
+    .btn-edit { background: var(--accent); color: white; }
+    .btn-delete { background: #666; color: white; }
+
+    .loading { text-align: center; padding: 2rem; color: var(--text-light); }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal.active { display: flex; }
+    .modal-content {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: 16px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal h3 {
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+    }
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      justify-content: flex-end;
+    }
+    .modal .btn { width: auto; }
+  </style>
 </head>
 <body>
-
-<!-- LOGIN -->
-<div id="login-screen">
-  <div class="lbox">
-    <div class="logo"></div>
-    <h2>Panel Admin</h2>
-    <p>Sintropía Social · Acceso restringido</p>
-    <form onsubmit="doLogin(event)">
-      <div class="campo"><label>Correo admin</label><input type="email" id="a-email" placeholder="dsalgado@sintropiasocial.com" required/></div>
-      <div class="campo"><label>Contraseña</label><input type="password" id="a-pass" placeholder="••••••••••" required/></div>
-      <div class="lerr" id="lerr">Credenciales incorrectas. Inténtalo de nuevo.</div>
-      <button type="submit" class="blin" id="blin">Ingresar al panel</button>
-    </form>
-    <div style="margin-top:16px;font-size:.79rem;color:#aaa">
-      Contraseña inicial: <strong>Sintropia2025!</strong><br>
-      <span style="font-size:.74rem">Cámbiala en el Apps Script después de tu primer ingreso.</span>
+  <!-- Login Form -->
+  <div id="login-container" class="login-container">
+    <div class="login-box">
+      <h2>Panel Admin</h2>
+      <p>Sintropía Social · Acceso restringido</p>
+      
+      <div id="login-error" class="error-msg">Credenciales incorrectas. Inténtalo de nuevo.</div>
+      
+      <form id="login-form">
+        <div class="form-group">
+          <label>Correo admin</label>
+          <input type="email" id="admin-email" placeholder="admin@sintropiasocial.com" required data-testid="admin-email-input">
+        </div>
+        <div class="form-group">
+          <label>Contraseña</label>
+          <input type="password" id="admin-password" placeholder="••••••••" required data-testid="admin-password-input">
+        </div>
+        <button type="submit" class="btn btn-primary" id="login-btn" data-testid="admin-login-btn">Ingresar al panel</button>
+      </form>
+      
+      <p style="text-align:center;margin-top:1.5rem;font-size:0.85rem;color:var(--text-light);">
+        ¿Olvidaste tu contraseña? <a href="mailto:contacto@sintropiasocial.com">Contactar soporte</a>
+      </p>
     </div>
   </div>
-</div>
 
-<!-- ADMIN -->
-<div id="admin-screen">
-  <aside class="aside">
-    <div class="aside-logo">SINTROPÍA SOCIAL<span>Panel de Administración</span></div>
-    <button class="nav-item active" onclick="showTab('dashboard')"><span class="ico">📊</span> Dashboard</button>
-    <button class="nav-item" onclick="showTab('pendientes')"><span class="ico">⏳</span> Citas pendientes <span id="pend-count" style="margin-left:auto;background:var(--n);color:#fff;border-radius:50px;padding:1px 7px;font-size:.72rem"></span></button>
-    <button class="nav-item" onclick="showTab('citas')"><span class="ico">📚</span> Todas las citas</button>
-    <button class="nav-item" onclick="showTab('usuarios')"><span class="ico">👥</span> Usuarios</button>
-    <div class="aside-foot">
-      <button class="nav-item" onclick="irAlSitio()"><span class="ico">🌐</span> Ver sitio</button>
-      <button class="nav-item" onclick="salir()"><span class="ico">🚪</span> Cerrar sesión</button>
-    </div>
-  </aside>
+  <!-- Admin Panel -->
+  <div id="admin-panel" class="admin-panel">
+    <header class="admin-header">
+      <h1>Sintropía Social · Admin</h1>
+      <nav class="admin-nav">
+        <a href="index.html">Ver sitio</a>
+        <button class="btn-logout" onclick="Auth.logoutAdmin()" data-testid="logout-btn">Cerrar sesión</button>
+      </nav>
+    </header>
 
-  <main class="main">
-    <!-- DASHBOARD -->
-    <div id="tab-dashboard">
-      <div class="page-title">Dashboard</div>
-      <div class="page-sub">Resumen del repositorio en tiempo real</div>
-      <div class="stats-row">
-        <div class="sc"><div class="sc-icon">📚</div><div class="sc-num" id="st-citas">—</div><div class="sc-lbl">Citas publicadas</div></div>
-        <div class="sc"><div class="sc-icon">👥</div><div class="sc-num" id="st-users">—</div><div class="sc-lbl">Usuarios registrados</div></div>
-        <div class="sc"><div class="sc-icon">⏳</div><div class="sc-num" id="st-pend">—</div><div class="sc-lbl">Citas pendientes</div></div>
-        <div class="sc"><div class="sc-icon">🗂️</div><div class="sc-num" id="st-cats">—</div><div class="sc-lbl">Categorías</div></div>
+    <div class="admin-content">
+      <div class="tabs">
+        <button class="tab active" onclick="showTab('dashboard')" data-testid="tab-dashboard">Dashboard</button>
+        <button class="tab" onclick="showTab('pendientes')" data-testid="tab-pendientes">Pendientes</button>
+        <button class="tab" onclick="showTab('citas')" data-testid="tab-citas">Citas</button>
+        <button class="tab" onclick="showTab('usuarios')" data-testid="tab-usuarios">Usuarios</button>
+        <button class="tab" onclick="showTab('blog')" data-testid="tab-blog">Blog</button>
       </div>
-      <div class="card">
-        <div class="card-head"><h3>Accesos rápidos</h3></div>
-        <div style="display:flex;gap:12px;flex-wrap:wrap">
-          <button class="btn-sm btn-edit" style="padding:9px 18px;font-size:.85rem" onclick="showTab('pendientes')">⏳ Revisar pendientes</button>
-          <button class="btn-sm btn-edit" style="padding:9px 18px;font-size:.85rem" onclick="showTab('usuarios')">👥 Ver usuarios</button>
-          <a href="index.html" style="background:rgba(91,33,212,.1);color:var(--m);padding:9px 18px;border-radius:6px;text-decoration:none;font-size:.85rem;font-weight:600">🌐 Ver sitio</a>
-          <a href="mailto:contacto@sintropiasocial.com" style="background:rgba(255,107,26,.1);color:var(--n);padding:9px 18px;border-radius:6px;text-decoration:none;font-size:.85rem;font-weight:600">✉️ contacto@sintropiasocial.com</a>
+
+      <!-- Dashboard Tab -->
+      <div id="tab-dashboard" class="tab-content active">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="icon">📚</div>
+            <div class="value" id="admin-stat-citas">—</div>
+            <div class="label">Citas publicadas</div>
+          </div>
+          <div class="stat-card">
+            <div class="icon">👥</div>
+            <div class="value" id="admin-stat-usuarios">—</div>
+            <div class="label">Usuarios registrados</div>
+          </div>
+          <div class="stat-card">
+            <div class="icon">⏳</div>
+            <div class="value" id="admin-stat-pendientes">—</div>
+            <div class="label">Citas pendientes</div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- PENDIENTES -->
-    <div id="tab-pendientes" style="display:none">
-      <div class="page-title">Citas pendientes</div>
-      <div class="page-sub">Aprueba o rechaza las citas enviadas por usuarios antes de publicarlas.</div>
-      <div class="card">
-        <div id="pend-table"><div class="empty">Cargando…</div></div>
+      <!-- Pendientes Tab -->
+      <div id="tab-pendientes" class="tab-content">
+        <h3>Citas pendientes de aprobación</h3>
+        <div id="pendientes-loading" class="loading">Cargando...</div>
+        <table class="data-table" id="pendientes-table" style="display:none;">
+          <thead>
+            <tr>
+              <th>Usuario</th>
+              <th>Autor</th>
+              <th>Categoría</th>
+              <th>Cita</th>
+              <th>Fecha</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="pendientes-body"></tbody>
+        </table>
+      </div>
+
+      <!-- Citas Tab -->
+      <div id="tab-citas" class="tab-content">
+        <h3>Todas las citas</h3>
+        <div id="citas-loading" class="loading">Cargando...</div>
+        <table class="data-table" id="citas-table" style="display:none;">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Autor</th>
+              <th>Categoría</th>
+              <th>Año</th>
+              <th>Cita</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="citas-body"></tbody>
+        </table>
+      </div>
+
+      <!-- Usuarios Tab -->
+      <div id="tab-usuarios" class="tab-content">
+        <h3>Usuarios registrados</h3>
+        <div id="usuarios-loading" class="loading">Cargando...</div>
+        <table class="data-table" id="usuarios-table" style="display:none;">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Institución</th>
+              <th>Fecha</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="usuarios-body"></tbody>
+        </table>
       </div>
     </div>
 
-    <!-- TODAS LAS CITAS -->
-    <div id="tab-citas" style="display:none">
-      <div class="page-title">Todas las citas</div>
-      <div class="page-sub">Edita o elimina citas del repositorio. Los cambios se guardan directamente en Google Sheets.</div>
-      <div class="card">
-        <div class="card-head">
-          <h3 id="citas-count">Citas</h3>
-          <input type="text" id="citas-search" placeholder="Buscar por autor, cita o categoría…" style="padding:8px 13px;border:1.5px solid var(--gb);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:.86rem;width:280px;outline:none" oninput="filtrarCitasAdmin()"/>
+      <!-- Blog Tab -->
+      <div id="tab-blog" class="tab-content">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+          <h3>Entradas del Blog</h3>
+          <button class="btn btn-primary" onclick="openBlogModal()" style="width:auto;">+ Nueva entrada</button>
         </div>
-        <div class="table-wrap"><div id="citas-table"><div class="empty">Cargando…</div></div></div>
+        <div id="blog-loading" class="loading">Cargando...</div>
+        <table class="data-table" id="blog-table" style="display:none;">
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Categoría</th>
+              <th>Autor</th>
+              <th>Fecha</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="blog-body"></tbody>
+        </table>
       </div>
-    </div>
-
-    <!-- USUARIOS -->
-    <div id="tab-usuarios" style="display:none">
-      <div class="page-title">Usuarios registrados</div>
-      <div class="page-sub">Gestiona los miembros de la comunidad. Puedes restablecer contraseñas y dar de baja usuarios.</div>
-      <div class="card">
-        <div class="card-head">
-          <h3 id="users-count">Usuarios</h3>
-          <input type="text" id="users-search" placeholder="Buscar por nombre o email…" style="padding:8px 13px;border:1.5px solid var(--gb);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:.86rem;width:260px;outline:none" oninput="filtrarUsuarios()"/>
-        </div>
-        <div class="table-wrap"><div id="users-table"><div class="empty">Cargando…</div></div></div>
-      </div>
-    </div>
-  </main>
-</div>
-
-<!-- MODAL EDITAR CITA -->
-<div class="mbg" id="mdl-edit">
-  <div class="mbox">
-    <h3>Editar cita</h3>
-    <div class="mfr2">
-      <div class="campo-m"><label>Autor</label><input type="text" id="e-aut"/></div>
-      <div class="campo-m"><label>Categoría</label><input type="text" id="e-cat"/></div>
-    </div>
-    <div class="mfr3">
-      <div class="campo-m"><label>Indicador</label><input type="text" id="e-ind"/></div>
-      <div class="campo-m"><label>Año</label><input type="text" id="e-yr"/></div>
-      <div class="campo-m"><label>Página</label><input type="text" id="e-pag"/></div>
-    </div>
-    <div class="campo-m"><label>Población</label><input type="text" id="e-pop"/></div>
-    <div class="campo-m"><label>Cita textual</label><textarea id="e-cita" rows="4"></textarea></div>
-    <div class="campo-m"><label>Comentarios</label><textarea id="e-com" rows="2"></textarea></div>
-    <div class="campo-m"><label>Cita APA</label><textarea id="e-apa" rows="2"></textarea></div>
-    <div class="campo-m"><label>Link</label><input type="text" id="e-link"/></div>
-    <input type="hidden" id="e-row"/>
-    <div class="mbtns">
-      <button class="btn-sec" onclick="cerrarEdit()">Cancelar</button>
-      <button class="btn-prim" onclick="guardarEdicion()">Guardar cambios</button>
     </div>
   </div>
-</div>
 
-<!-- MODAL RECHAZAR -->
-<div class="mbg" id="mdl-rej">
-  <div class="mbox" style="max-width:420px">
-    <h3>Rechazar cita</h3>
-    <div class="campo-m" style="margin-top:14px"><label>Motivo (opcional)</label><textarea id="rej-motivo" rows="3" placeholder="Explica brevemente por qué se rechaza…"></textarea></div>
-    <input type="hidden" id="rej-row"/>
-    <div class="mbtns">
-      <button class="btn-sec" onclick="cerrarRej()">Cancelar</button>
-      <button class="btn-prim" style="background:#dc2626" onclick="confirmarRechazo()">Rechazar</button>
+  <!-- Edit Modal -->
+  <div id="edit-modal" class="modal">
+    <div class="modal-content">
+      <h3>Editar cita</h3>
+      <form id="edit-form">
+        <input type="hidden" id="edit-rowNum">
+        <div class="form-group">
+          <label>Autor</label>
+          <input type="text" id="edit-autor">
+        </div>
+        <div class="form-group">
+          <label>Categoría</label>
+          <input type="text" id="edit-categoria">
+        </div>
+        <div class="form-group">
+          <label>Indicador</label>
+          <input type="text" id="edit-indicador">
+        </div>
+        <div class="form-group">
+          <label>Año</label>
+          <input type="text" id="edit-year">
+        </div>
+        <div class="form-group">
+          <label>Población</label>
+          <input type="text" id="edit-poblacion">
+        </div>
+        <div class="form-group">
+          <label>Cita</label>
+          <textarea id="edit-cita" rows="4" style="width:100%;padding:0.8rem;border:1px solid var(--border);border-radius:8px;"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Comentarios</label>
+          <textarea id="edit-comentarios" rows="2" style="width:100%;padding:0.8rem;border:1px solid var(--border);border-radius:8px;"></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn" style="background:var(--text-light);color:white;" onclick="closeEditModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
     </div>
   </div>
-</div>
 
-<div class="toast" id="toast"></div>
+  <!-- Blog Modal -->
+  <div id="blog-modal" class="modal">
+    <div class="modal-content" style="max-width:700px;">
+      <h3 id="blog-modal-title">Nueva entrada de blog</h3>
+      <form id="blog-form">
+        <input type="hidden" id="blog-id">
+        <div class="form-group">
+          <label>Título *</label>
+          <input type="text" id="blog-titulo" required style="width:100%;padding:0.8rem;border:1px solid var(--border);border-radius:8px;">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div class="form-group">
+            <label>Categoría</label>
+            <select id="blog-categoria" style="width:100%;padding:0.8rem;border:1px solid var(--border);border-radius:8px;">
+              <option value="General">General</option>
+              <option value="Investigación">Investigación</option>
+              <option value="Metodología">Metodología</option>
+              <option value="Noticias">Noticias</option>
+              <option value="Reflexiones">Reflexiones</option>
+              <option value="Recursos">Recursos</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Estado</label>
+            <select id="blog-estado" style="width:100%;padding:0.8rem;border:1px solid var(--border);border-radius:8px;">
+              <option value="PUBLICADO">Publicado</option>
+              <option value="BORRADOR">Borrador</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>URL de imagen (opcional)</label>
+          <input type="url" id="blog-imagen" placeholder="https://..." style="width:100%;padding:0.8rem;border:1px solid var(--border);border-radius:8px;">
+        </div>
+        <div class="form-group">
+          <label>Contenido *</label>
+          <textarea id="blog-contenido" rows="10" required style="width:100%;padding:0.8rem;border:1px solid var(--border);border-radius:8px;font-family:inherit;" placeholder="Escribe el contenido de tu artículo..."></textarea>
+          <small style="color:var(--text-light);">Usa doble salto de línea para separar párrafos.</small>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn" style="background:var(--text-light);color:white;width:auto;" onclick="closeBlogModal()">Cancelar</button>
+          <button type="submit" class="btn btn-primary" style="width:auto;">Guardar entrada</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
-<script src="config.js"></script>
-<script>
-let citasDB = [], usuariosDB = [], pendientesDB = [], adminToken = null;
+  <script src="config.js"></script>
+  <script>
+    var adminData = {
+      citas: [],
+      usuarios: [],
+      pendientes: [],
+      blogPosts: []
+    };
 
-// ── LOGIN ──
-async function doLogin(e) {
-  e.preventDefault();
-  const btn = document.getElementById('blin');
-  btn.innerHTML = '<span class="spinner"></span>Ingresando…'; btn.disabled = true;
-  document.getElementById('lerr').classList.remove('show');
-  const email = document.getElementById('a-email').value;
-  const pass  = document.getElementById('a-pass').value;
-  const passHash = await sha256(pass);
-  const r = await api('loginAdmin', { email, passHash });
-  if (r.ok) {
-    adminToken = r.token;
-    Auth.setAdmin({ token: r.token, email: r.email });
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('admin-screen').style.display = 'block';
-    cargarTodo();
-  } else {
-    document.getElementById('lerr').classList.add('show');
-    btn.innerHTML = 'Ingresar al panel'; btn.disabled = false;
-  }
-}
+    // Check if already logged in
+    document.addEventListener('DOMContentLoaded', function() {
+      if (Auth.isAdmin()) {
+        showAdminPanel();
+      }
+    });
 
-// Si ya tiene sesión de admin activa
-window.addEventListener('DOMContentLoaded', () => {
-  const a = Auth.getAdmin();
-  if (a?.token) {
-    adminToken = a.token;
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('admin-screen').style.display = 'block';
-    cargarTodo();
-  }
-});
+    // Login form
+    document.getElementById('login-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      var email = document.getElementById('admin-email').value.trim().toLowerCase();
+      var password = document.getElementById('admin-password').value;
+      var loginBtn = document.getElementById('login-btn');
+      var errorEl = document.getElementById('login-error');
+      
+      errorEl.classList.remove('show');
+      loginBtn.disabled = true;
+      loginBtn.textContent = 'Verificando...';
+      
+      try {
+        // Generate SHA-256 hash of password
+        var passHash = await sha256(password);
+        console.log('Email:', email);
+        console.log('Password hash:', passHash);
+        
+        var result = await api('loginAdmin', {
+          email: email,
+          passHash: passHash
+        });
+        
+        console.log('Login result:', result);
+        
+        if (result.ok) {
+          Auth.setAdmin({ token: result.token, email: result.email });
+          showAdminPanel();
+        } else {
+          errorEl.textContent = result.error || 'Credenciales incorrectas';
+          errorEl.classList.add('show');
+        }
+      } catch(err) {
+        console.error('Login error:', err);
+        errorEl.textContent = 'Error de conexión: ' + err.message;
+        errorEl.classList.add('show');
+      }
+      
+      loginBtn.disabled = false;
+      loginBtn.textContent = 'Ingresar al panel';
+    });
 
-// ── CARGAR TODO ──
-async function cargarTodo() {
-  const [rc, ru, rp] = await Promise.all([
-    api('getCitas'), api('getUsuarios'), api('getPendientes')
-  ]);
-  if (rc.ok) citasDB = rc.data || [];
-  if (ru.ok) usuariosDB = ru.data || [];
-  if (rp.ok) pendientesDB = rp.data || [];
+    function showAdminPanel() {
+      document.getElementById('login-container').style.display = 'none';
+      document.getElementById('admin-panel').classList.add('active');
+      loadAdminData();
+    }
 
-  // Stats
-  document.getElementById('st-citas').textContent = citasDB.length;
-  document.getElementById('st-users').textContent = usuariosDB.length;
-  document.getElementById('st-pend').textContent  = pendientesDB.length;
-  document.getElementById('st-cats').textContent  = new Set(citasDB.map(d=>d['Categoría']).filter(Boolean)).size;
-  if (pendientesDB.length) document.getElementById('pend-count').textContent = pendientesDB.length;
+    async function loadAdminData() {
+      var token = Auth.getToken();
+      
+      // Load all data in parallel
+      var [citasRes, usuariosRes, pendientesRes, blogRes] = await Promise.all([
+        api('getCitas'),
+        api('getUsuarios', { adminToken: token }),
+        api('getPendientes', { adminToken: token }),
+        api('getBlogPosts', { adminToken: token })
+      ]);
+      
+      adminData.citas = citasRes.ok ? citasRes.data : [];
+      adminData.usuarios = usuariosRes.ok ? usuariosRes.data : [];
+      adminData.pendientes = pendientesRes.ok ? pendientesRes.data : [];
+      adminData.blogPosts = blogRes.ok ? blogRes.data : [];
+      
+      // Update stats
+      document.getElementById('admin-stat-citas').textContent = adminData.citas.length;
+      document.getElementById('admin-stat-usuarios').textContent = adminData.usuarios.length;
+      document.getElementById('admin-stat-pendientes').textContent = adminData.pendientes.length;
+      
+      // Render tables
+      renderPendientes();
+      renderCitas();
+      renderUsuarios();
+      renderBlogPosts();
+    }
 
-  renderPendientes(); renderCitas(); renderUsuarios();
-}
+    function showTab(tabId) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelector('[onclick="showTab(\'' + tabId + '\')"]').classList.add('active');
+      document.getElementById('tab-' + tabId).classList.add('active');
+    }
 
-// ── TABS ──
-function showTab(name) {
-  ['dashboard','pendientes','citas','usuarios'].forEach(t => {
-    document.getElementById('tab-'+t).style.display = t===name ? 'block' : 'none';
-  });
-  document.querySelectorAll('.nav-item').forEach((el,i) => {
-    el.classList.toggle('active', ['dashboard','pendientes','citas','usuarios'][i]===name);
-  });
-}
+    function renderPendientes() {
+      var loading = document.getElementById('pendientes-loading');
+      var table = document.getElementById('pendientes-table');
+      var tbody = document.getElementById('pendientes-body');
+      
+      loading.style.display = 'none';
+      tbody.innerHTML = '';
+      
+      if (adminData.pendientes.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No hay citas pendientes</td></tr>';
+      } else {
+        adminData.pendientes.forEach(function(p) {
+          var tr = document.createElement('tr');
+          tr.innerHTML = 
+            '<td>' + (p['Usuario'] || '-') + '</td>' +
+            '<td>' + (p['Autor'] || '-') + '</td>' +
+            '<td>' + (p['Categoria'] || '-') + '</td>' +
+            '<td>' + (p['Cita'] || '-').slice(0, 100) + '...</td>' +
+            '<td>' + (p['Fecha'] || '-').slice(0, 10) + '</td>' +
+            '<td>' +
+              '<button class="action-btn btn-approve" onclick="aprobarCita(' + p._rowIndex + ')">✓ Aprobar</button>' +
+              '<button class="action-btn btn-reject" onclick="rechazarCita(' + p._rowIndex + ')">✗ Rechazar</button>' +
+            '</td>';
+          tbody.appendChild(tr);
+        });
+      }
+      table.style.display = 'table';
+    }
 
-// ── PENDIENTES ──
-function renderPendientes() {
-  const box = document.getElementById('pend-table');
-  if (!pendientesDB.length) { box.innerHTML = '<div class="empty">✓ No hay citas pendientes de revisión</div>'; return; }
-  let html = `<table><thead><tr><th>Autor</th><th>Cita</th><th>Categoría</th><th>Usuario</th><th>Fecha</th><th>Acciones</th></tr></thead><tbody>`;
-  pendientesDB.forEach((d,i) => {
-    const fecha = d['Fecha'] ? new Date(d['Fecha']).toLocaleDateString('es-MX') : '';
-    html += `<tr>
-      <td><strong>${d['Autor']||''}</strong></td>
-      <td style="font-style:italic;color:#1a0f33">"${String(d['Cita']||'').slice(0,120)}…"</td>
-      <td><span class="badge bg-pend">${d['Categoría']||''}</span></td>
-      <td>${d['Usuario']||''}</td>
-      <td style="white-space:nowrap">${fecha}</td>
-      <td style="white-space:nowrap;display:flex;gap:6px">
-        <button class="btn-sm btn-ok" onclick="aprobar(${d._rowIndex})">✓ Aprobar</button>
-        <button class="btn-sm btn-del" onclick="abrirRej(${d._rowIndex})">✗ Rechazar</button>
-      </td></tr>`;
-  });
-  html += '</tbody></table>';
-  box.innerHTML = html;
-}
+    function renderCitas() {
+      var loading = document.getElementById('citas-loading');
+      var table = document.getElementById('citas-table');
+      var tbody = document.getElementById('citas-body');
+      
+      loading.style.display = 'none';
+      tbody.innerHTML = '';
+      
+      adminData.citas.forEach(function(c) {
+        var tr = document.createElement('tr');
+        tr.innerHTML = 
+          '<td>' + (c['No'] || '-') + '</td>' +
+          '<td>' + (c['Autor'] || '-') + '</td>' +
+          '<td>' + (c['Categoria'] || '-') + '</td>' +
+          '<td>' + (c['Anio'] || '-') + '</td>' +
+          '<td>' + (c['Cita'] || '-').slice(0, 80) + '...</td>' +
+          '<td>' +
+            '<button class="action-btn btn-edit" onclick="editCita(' + c._row + ')">Editar</button>' +
+            '<button class="action-btn btn-delete" onclick="eliminarCita(' + c._row + ')">Eliminar</button>' +
+          '</td>';
+        tbody.appendChild(tr);
+      });
+      table.style.display = 'table';
+    }
 
-async function aprobar(rowIndex) {
-  if (!confirm('¿Aprobar esta cita y publicarla en el repositorio?')) return;
-  const r = await api('aprobarCita', { adminToken, rowIndex });
-  if (r.ok) { showToast('✓ Cita aprobada y publicada'); await cargarTodo(); }
-  else showToast('Error: ' + r.error);
-}
+    function renderUsuarios() {
+      var loading = document.getElementById('usuarios-loading');
+      var table = document.getElementById('usuarios-table');
+      var tbody = document.getElementById('usuarios-body');
+      
+      loading.style.display = 'none';
+      tbody.innerHTML = '';
+      
+      adminData.usuarios.forEach(function(u) {
+        var tr = document.createElement('tr');
+        tr.innerHTML = 
+          '<td>' + (u['ID'] || '-') + '</td>' +
+          '<td>' + (u['Nombre'] || '') + ' ' + (u['Apellido'] || '') + '</td>' +
+          '<td>' + (u['Email'] || '-') + '</td>' +
+          '<td>' + (u['Institucion'] || '-') + '</td>' +
+          '<td>' + (u['Fecha'] || '-').slice(0, 10) + '</td>' +
+          '<td>' +
+            '<button class="action-btn btn-edit" onclick="resetPassword(' + u._row + ', \'' + u['Email'] + '\')">Reset Pass</button>' +
+            '<button class="action-btn btn-delete" onclick="eliminarUsuario(' + u._row + ')">Eliminar</button>' +
+          '</td>';
+        tbody.appendChild(tr);
+      });
+      table.style.display = 'table';
+    }
 
-function abrirRej(rowIndex) {
-  document.getElementById('rej-row').value = rowIndex;
-  document.getElementById('rej-motivo').value = '';
-  document.getElementById('mdl-rej').classList.add('show');
-}
-function cerrarRej() { document.getElementById('mdl-rej').classList.remove('show'); }
-async function confirmarRechazo() {
-  const rowIndex = parseInt(document.getElementById('rej-row').value);
-  const motivo   = document.getElementById('rej-motivo').value;
-  const r = await api('rechazarCita', { adminToken, rowIndex, motivo });
-  cerrarRej();
-  if (r.ok) { showToast('Cita rechazada'); await cargarTodo(); }
-  else showToast('Error: ' + r.error);
-}
+    async function aprobarCita(rowIndex) {
+      if (!confirm('¿Aprobar esta cita?')) return;
+      var result = await api('aprobarCita', { adminToken: Auth.getToken(), rowIndex: rowIndex });
+      alert(result.ok ? 'Cita aprobada' : 'Error: ' + result.error);
+      loadAdminData();
+    }
 
-// ── CITAS ──
-function renderCitas(data) {
-  data = data || citasDB;
-  document.getElementById('citas-count').textContent = `${data.length} citas`;
-  const box = document.getElementById('citas-table');
-  if (!data.length) { box.innerHTML = '<div class="empty">Sin citas</div>'; return; }
-  let html = `<table><thead><tr><th>No</th><th>Autor</th><th>Cita</th><th>Categoría</th><th>Indicador</th><th>Año</th><th>Acciones</th></tr></thead><tbody>`;
-  data.forEach(d => {
-    html += `<tr>
-      <td style="color:#aaa;font-size:.75rem">${d['No']||''}</td>
-      <td><strong>${d['Autor']||''}</strong></td>
-      <td style="font-style:italic;color:#1a0f33;font-size:.82rem">"${String(d['Cita']||'').slice(0,100)}…"</td>
-      <td><span class="badge bg-ok">${d['Categoría']||''}</span></td>
-      <td style="font-size:.81rem">${d['Indicador']||''}</td>
-      <td>${d['Año']||''}</td>
-      <td style="white-space:nowrap;display:flex;gap:5px">
-        <button class="btn-sm btn-edit" onclick='abrirEdit(${JSON.stringify(d)})'>✏️ Editar</button>
-        <button class="btn-sm btn-del" onclick="eliminarCita(${d._row})">🗑️</button>
-      </td></tr>`;
-  });
-  html += '</tbody></table>';
-  box.innerHTML = html;
-}
+    async function rechazarCita(rowIndex) {
+      var motivo = prompt('Motivo del rechazo (opcional):');
+      var result = await api('rechazarCita', { adminToken: Auth.getToken(), rowIndex: rowIndex, motivo: motivo || '' });
+      alert(result.ok ? 'Cita rechazada' : 'Error: ' + result.error);
+      loadAdminData();
+    }
 
-function filtrarCitasAdmin() {
-  const q = document.getElementById('citas-search').value.toLowerCase();
-  const res = citasDB.filter(d =>
-    (d['Autor']||'').toLowerCase().includes(q) ||
-    (d['Cita']||'').toLowerCase().includes(q) ||
-    (d['Categoría']||'').toLowerCase().includes(q)
-  );
-  renderCitas(res);
-}
+    function editCita(rowNum) {
+      var cita = adminData.citas.find(c => c._row === rowNum);
+      if (!cita) return;
+      
+      document.getElementById('edit-rowNum').value = rowNum;
+      document.getElementById('edit-autor').value = cita['Autor'] || '';
+      document.getElementById('edit-categoria').value = cita['Categoria'] || '';
+      document.getElementById('edit-indicador').value = cita['Indicador'] || '';
+      document.getElementById('edit-year').value = cita['Anio'] || '';
+      document.getElementById('edit-poblacion').value = cita['Poblacion'] || '';
+      document.getElementById('edit-cita').value = cita['Cita'] || '';
+      document.getElementById('edit-comentarios').value = cita['Comentarios'] || '';
+      
+      document.getElementById('edit-modal').classList.add('active');
+    }
 
-function abrirEdit(d) {
-  document.getElementById('e-aut').value  = d['Autor']||'';
-  document.getElementById('e-cat').value  = d['Categoría']||'';
-  document.getElementById('e-ind').value  = d['Indicador']||'';
-  document.getElementById('e-yr').value   = d['Año']||'';
-  document.getElementById('e-pag').value  = d['Página']||'';
-  document.getElementById('e-pop').value  = d['Población']||'';
-  document.getElementById('e-cita').value = d['Cita']||'';
-  document.getElementById('e-com').value  = d['Comentarios']||'';
-  document.getElementById('e-apa').value  = d['Cita Apa']||'';
-  document.getElementById('e-link').value = d['Link ']||d['Link']||'';
-  document.getElementById('e-row').value  = d._row;
-  document.getElementById('mdl-edit').classList.add('show');
-}
-function cerrarEdit() { document.getElementById('mdl-edit').classList.remove('show'); }
+    function closeEditModal() {
+      document.getElementById('edit-modal').classList.remove('active');
+    }
 
-async function guardarEdicion() {
-  const rowNum = parseInt(document.getElementById('e-row').value);
-  const r = await api('editarCita', {
-    adminToken, rowNum,
-    autor:       document.getElementById('e-aut').value,
-    categoria:   document.getElementById('e-cat').value,
-    indicador:   document.getElementById('e-ind').value,
-    year:        document.getElementById('e-yr').value,
-    pagina:      document.getElementById('e-pag').value,
-    poblacion:   document.getElementById('e-pop').value,
-    cita:        document.getElementById('e-cita').value,
-    comentarios: document.getElementById('e-com').value,
-    citaAPA:     document.getElementById('e-apa').value,
-    link:        document.getElementById('e-link').value,
-  });
-  cerrarEdit();
-  if (r.ok) { showToast('✓ Cita actualizada en Google Sheets'); await cargarTodo(); }
-  else showToast('Error: ' + r.error);
-}
+    document.getElementById('edit-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      var result = await api('editarCita', {
+        adminToken: Auth.getToken(),
+        rowNum: document.getElementById('edit-rowNum').value,
+        autor: document.getElementById('edit-autor').value,
+        categoria: document.getElementById('edit-categoria').value,
+        indicador: document.getElementById('edit-indicador').value,
+        year: document.getElementById('edit-year').value,
+        poblacion: document.getElementById('edit-poblacion').value,
+        cita: document.getElementById('edit-cita').value,
+        comentarios: document.getElementById('edit-comentarios').value
+      });
+      alert(result.ok ? 'Cita actualizada' : 'Error: ' + result.error);
+      closeEditModal();
+      loadAdminData();
+    });
 
-async function eliminarCita(rowNum) {
-  if (!confirm('¿Eliminar esta cita permanentemente? Esta acción no se puede deshacer.')) return;
-  const r = await api('eliminarCita', { adminToken, rowNum });
-  if (r.ok) { showToast('Cita eliminada'); await cargarTodo(); }
-  else showToast('Error: ' + r.error);
-}
+    async function eliminarCita(rowNum) {
+      if (!confirm('¿Eliminar esta cita permanentemente?')) return;
+      var result = await api('eliminarCita', { adminToken: Auth.getToken(), rowNum: rowNum });
+      alert(result.ok ? 'Cita eliminada' : 'Error: ' + result.error);
+      loadAdminData();
+    }
 
-// ── USUARIOS ──
-function renderUsuarios(data) {
-  data = data || usuariosDB;
-  document.getElementById('users-count').textContent = `${data.length} usuarios`;
-  const box = document.getElementById('users-table');
-  if (!data.length) { box.innerHTML = '<div class="empty">Sin usuarios registrados aún</div>'; return; }
-  let html = `<table><thead><tr><th>Nombre</th><th>Email</th><th>Institución</th><th>Área</th><th>Fecha</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>`;
-  data.forEach(d => {
-    const fecha = d['Fecha'] ? new Date(d['Fecha']).toLocaleDateString('es-MX') : '';
-    html += `<tr>
-      <td><strong>${d['Nombre']||''} ${d['Apellido']||''}</strong></td>
-      <td style="font-size:.81rem">${d['Email']||''}</td>
-      <td style="font-size:.81rem">${d['Institución']||''}</td>
-      <td><span class="badge bg-ok" style="font-size:.7rem">${d['Área']||''}</span></td>
-      <td style="white-space:nowrap;font-size:.81rem">${fecha}</td>
-      <td><span class="badge ${d['Estado']==='ACTIVO'?'bg-ok':'bg-no'}">${d['Estado']||''}</span></td>
-      <td style="white-space:nowrap;display:flex;gap:5px">
-        <button class="btn-sm btn-pass" onclick="resetPass(${d._row},'${d['Email']}')">🔑 Reset</button>
-        <button class="btn-sm btn-del" onclick="eliminarUsuario(${d._row})">🗑️</button>
-      </td></tr>`;
-  });
-  html += '</tbody></table>';
-  box.innerHTML = html;
-}
+    async function eliminarUsuario(rowNum) {
+      if (!confirm('¿Eliminar este usuario permanentemente?')) return;
+      var result = await api('eliminarUsuario', { adminToken: Auth.getToken(), rowNum: rowNum });
+      alert(result.ok ? 'Usuario eliminado' : 'Error: ' + result.error);
+      loadAdminData();
+    }
 
-function filtrarUsuarios() {
-  const q = document.getElementById('users-search').value.toLowerCase();
-  const res = usuariosDB.filter(d =>
-    (d['Nombre']||'').toLowerCase().includes(q) ||
-    (d['Apellido']||'').toLowerCase().includes(q) ||
-    (d['Email']||'').toLowerCase().includes(q)
-  );
-  renderUsuarios(res);
-}
+    async function resetPassword(rowNum, email) {
+      if (!confirm('¿Restablecer contraseña de ' + email + '?')) return;
+      var result = await api('restablecerPass', { adminToken: Auth.getToken(), rowNum: rowNum, email: email });
+      alert(result.ok ? result.msg : 'Error: ' + result.error);
+    }
 
-async function resetPass(rowNum, email) {
-  if (!confirm(`¿Restablecer la contraseña de ${email}? Se enviará una contraseña temporal por email.`)) return;
-  const r = await api('restablecerPass', { adminToken, rowNum, email });
-  if (r.ok) showToast('✓ ' + r.msg);
-  else showToast('Error: ' + r.error);
-}
+    // Blog functions
+    function renderBlogPosts() {
+      var loading = document.getElementById('blog-loading');
+      var table = document.getElementById('blog-table');
+      var tbody = document.getElementById('blog-body');
+      
+      loading.style.display = 'none';
+      tbody.innerHTML = '';
+      
+      if (adminData.blogPosts.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No hay entradas de blog</td></tr>';
+      } else {
+        adminData.blogPosts.forEach(function(post) {
+          var tr = document.createElement('tr');
+          var fecha = post.fecha ? post.fecha.slice(0, 10) : '-';
+          tr.innerHTML = 
+            '<td>' + (post.titulo || '-') + '</td>' +
+            '<td>' + (post.categoria || 'General') + '</td>' +
+            '<td>' + (post.autor || 'Admin') + '</td>' +
+            '<td>' + fecha + '</td>' +
+            '<td><span style="padding:0.25rem 0.5rem;border-radius:4px;font-size:0.75rem;background:' + (post.estado === 'PUBLICADO' ? '#d4edda' : '#fff3cd') + ';color:' + (post.estado === 'PUBLICADO' ? '#155724' : '#856404') + ';">' + (post.estado || 'BORRADOR') + '</span></td>' +
+            '<td>' +
+              '<button class="action-btn btn-edit" onclick="editBlogPost(\'' + post.id + '\')">Editar</button>' +
+              '<button class="action-btn btn-delete" onclick="deleteBlogPost(\'' + post.id + '\', ' + post._row + ')">Eliminar</button>' +
+            '</td>';
+          tbody.appendChild(tr);
+        });
+      }
+      table.style.display = 'table';
+    }
 
-async function eliminarUsuario(rowNum) {
-  if (!confirm('¿Eliminar este usuario? No se puede deshacer.')) return;
-  const r = await api('eliminarUsuario', { adminToken, rowNum });
-  if (r.ok) { showToast('Usuario eliminado'); await cargarTodo(); }
-  else showToast('Error: ' + r.error);
-}
+    function openBlogModal(post) {
+      document.getElementById('blog-modal-title').textContent = post ? 'Editar entrada' : 'Nueva entrada de blog';
+      document.getElementById('blog-id').value = post ? post.id : '';
+      document.getElementById('blog-titulo').value = post ? post.titulo : '';
+      document.getElementById('blog-categoria').value = post ? post.categoria : 'General';
+      document.getElementById('blog-estado').value = post ? post.estado : 'PUBLICADO';
+      document.getElementById('blog-imagen').value = post ? post.imagen : '';
+      document.getElementById('blog-contenido').value = post ? post.contenido : '';
+      document.getElementById('blog-modal').classList.add('active');
+    }
 
-function irAlSitio() { window.open('index.html','_blank'); }
-function salir() { Auth.logoutAdmin(); location.reload(); }
-function showToast(m) { const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3500); }
-</script>
+    function closeBlogModal() {
+      document.getElementById('blog-modal').classList.remove('active');
+    }
+
+    function editBlogPost(postId) {
+      var post = adminData.blogPosts.find(p => p.id === postId);
+      if (post) openBlogModal(post);
+    }
+
+    document.getElementById('blog-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      var postId = document.getElementById('blog-id').value;
+      var action = postId ? 'editarBlogPost' : 'crearBlogPost';
+      
+      var result = await api(action, {
+        adminToken: Auth.getToken(),
+        id: postId || 'B' + Date.now(),
+        titulo: document.getElementById('blog-titulo').value,
+        categoria: document.getElementById('blog-categoria').value,
+        estado: document.getElementById('blog-estado').value,
+        imagen: document.getElementById('blog-imagen').value,
+        contenido: document.getElementById('blog-contenido').value,
+        autor: Auth.getAdmin().email.split('@')[0]
+      });
+      
+      if (result.ok) {
+        closeBlogModal();
+        loadAdminData();
+        alert(postId ? 'Entrada actualizada' : 'Entrada creada');
+      } else {
+        alert('Error: ' + result.error);
+      }
+    });
+
+    async function deleteBlogPost(postId, rowNum) {
+      if (!confirm('¿Eliminar esta entrada de blog?')) return;
+      var result = await api('eliminarBlogPost', { adminToken: Auth.getToken(), id: postId, rowNum: rowNum });
+      alert(result.ok ? 'Entrada eliminada' : 'Error: ' + result.error);
+      loadAdminData();
+    }
+  </script>
 </body>
 </html>

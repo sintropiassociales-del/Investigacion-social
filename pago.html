@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pago — Sintropía Social</title>
+  <script src="https://www.paypal.com/sdk/js?client-id=BAADNWafE2xUH09mKvDiejlkmXxK9XQx1oa-ujzF7TF-pQNLf1a58OhHRUMUNoDx9dgXzhDclHdQhukdW0&components=hosted-buttons&disable-funding=venmo&currency=MXN"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #faf9f7;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+    .logo {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #1a3a2f;
+      margin-bottom: 0.5rem;
+    }
+    h2 {
+      color: #1a3a2f;
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    p { color: #666; margin-bottom: 1rem; }
+    .price {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #c9a227;
+      margin-bottom: 1.5rem;
+    }
+    .price span { font-size: 1rem; color: #666; }
+    #paypal-container-RY5K7VHYRPJLY { margin: 1.5rem 0; }
+    .secure-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      color: #666;
+      font-size: 0.8rem;
+      margin-top: 1rem;
+    }
+    .btn {
+      display: inline-block;
+      padding: 0.9rem 2rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      width: 100%;
+      margin-top: 1rem;
+    }
+    .btn-success {
+      background: #28a745;
+      color: white;
+    }
+    .success { display: none; }
+    .success.show { display: block; }
+    .success-icon {
+      font-size: 4rem;
+      color: #28a745;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="payment-form">
+      <p class="logo">Sintropía Social</p>
+      <h2>Descarga de citas</h2>
+      <p>Pago único por tu selección filtrada</p>
+      <div class="price">$18 <span>MXN</span></div>
+      
+      <div id="paypal-container-RY5K7VHYRPJLY"></div>
+      
+      <p style="font-size:0.85rem;margin-top:1.5rem;color:#666;">
+        ✓ Después de pagar, tu PDF se descargará automáticamente<br>
+        ✓ No necesitas tener cuenta registrada
+      </p>
+      
+      <div class="secure-badge">
+        🔒 Pago seguro con PayPal
+      </div>
+    </div>
+    
+    <div id="success-message" class="success">
+      <div class="success-icon">✓</div>
+      <h2>¡Pago completado!</h2>
+      <p>Tu PDF se está descargando...<br>Esta ventana se cerrará automáticamente.</p>
+    </div>
+  </div>
+
+  <script>
+    var paymentVerified = false;
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Inicializando botón de PayPal...');
+      
+      if (typeof paypal !== 'undefined' && paypal.HostedButtons) {
+        paypal.HostedButtons({
+          hostedButtonId: "RY5K7VHYRPJLY",
+          onApprove: function(data, actions) {
+            // PayPal payment was approved
+            paymentVerified = true;
+            console.log('✓ PayPal payment approved:', data);
+            console.log('Order ID:', data.orderID);
+            
+            // Show success message immediately
+            document.getElementById('payment-form').style.display = 'none';
+            document.getElementById('success-message').classList.add('show');
+            
+            // Notify parent window to generate PDF
+            console.log('Notificando ventana principal para generar PDF...');
+            if (window.opener) {
+              window.opener.postMessage({ 
+                type: 'PAYMENT_SUCCESS',
+                orderId: data.orderID || data.subscriptionID,
+                timestamp: new Date().toISOString()
+              }, '*');
+              console.log('✓ Mensaje enviado a ventana principal');
+            } else {
+              console.error('✗ window.opener no disponible');
+              alert('Por favor no cierres la ventana anterior. Regresa a la página principal para descargar tu PDF.');
+            }
+            
+            // Close window after 3 seconds (dar tiempo para descarga)
+            setTimeout(function() {
+              console.log('Cerrando ventana de pago...');
+              window.close();
+            }, 3000);
+          },
+          onCancel: function(data) {
+            console.log('Pago cancelado por el usuario');
+            alert('Pago cancelado. Puedes cerrar esta ventana.');
+          },
+          onError: function(err) {
+            console.error('Error en el pago:', err);
+            alert('Error en el pago: ' + (err.message || 'Error desconocido'));
+          }
+        }).render("#paypal-container-RY5K7VHYRPJLY");
+        console.log('✓ Botón de PayPal renderizado');
+      } else {
+        console.error('✗ PayPal SDK no cargado');
+        alert('Error: No se pudo cargar PayPal. Por favor recarga la página.');
+      }
+    });
+    
+    function confirmarPago() {
+      if (!paymentVerified) {
+        alert('⚠️ Debes completar el pago en PayPal primero.\n\nHaz clic en el botón amarillo de PayPal arriba para procesar tu pago.');
+        return;
+      }
+      
+      // This will only execute if payment was verified through onApprove
+      document.getElementById('payment-form').style.display = 'none';
+      document.getElementById('success-message').classList.add('show');
+      
+      if (window.opener) {
+        window.opener.postMessage({ type: 'PAYMENT_SUCCESS' }, '*');
+      }
+      
+      setTimeout(function() {
+        window.close();
+      }, 2000);
+    }
+  </script>
+</body>
+</html>

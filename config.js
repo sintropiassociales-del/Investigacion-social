@@ -1,15 +1,15 @@
 // ============================================================
-//  SINTROPÍA SOCIAL — config.js
+// SINTROPÍA SOCIAL — config.js
 // ============================================================
 
 var CONFIG = {
-  API_URL: 'https://script.google.com/macros/s/AKfycbxnBy1DKH14oWGEnzFHLDrD0XlgshVkBJrCL5b7zp8XKO0hmE4xriXEDXU9PZZl5KzovQ/exec',
-  SHEET_ID: '114sl6Mt-UhQQsv7zyicAAmsYzo3VDPoAvbT-0MakK94',
+  API_URL: 'https://script.google.com/macros/s/AKfycbzde2DznpNvoQYTjTH7aiNbDRrJyEskNrnGu1foPqWc9KQNpbMiUaBMYpLMCNpZMCiY7A/exec',
   GUEST_PERCENT: 0.10,
   CONTACT_EMAIL: 'contacto@sintropiasocial.com',
   ADMIN_EMAILS: ['dsalgado@sintropiasocial.com'],
   PAYPAL_CLIENT_ID: 'BAADNWafE2xUH09mKvDiejlkmXxK9XQx1oa-ujzF7TF-pQNLf1a58OhHRUMUNoDx9dgXzhDclHdQhukdW0',
-  PAYPAL_BUTTON_ID: 'RY5K7VHYRPJLY'
+  PAYPAL_BUTTON_ID: 'RY5K7VHYRPJLY',
+  PAYPAL_SUBSCRIPTION_ID: '' // Aquí pondrás tu Plan ID de suscripción mensual
 };
 
 // ── Auth helpers ──
@@ -55,16 +55,18 @@ async function api(action, params) {
       });
     }
     var url = CONFIG.API_URL + '?' + p.toString();
-    var res  = await fetch(url);
+    console.log('API Request:', action, params);
+    var res = await fetch(url);
     var text = await res.text();
+    console.log('API Response:', text.slice(0, 500));
     try {
       return JSON.parse(text);
     } catch(e) {
       console.error('Respuesta no JSON:', text.slice(0, 400));
-      return { ok: false, error: 'Error en la respuesta del servidor.' };
+      return { ok: false, error: 'Error en la respuesta del servidor. Verifica que el Web App esté desplegado correctamente.' };
     }
   } catch(e) {
     console.error('API error:', e);
-    return { ok: false, error: 'Error de conexión con el servidor.' };
+    return { ok: false, error: 'Error de conexión con el servidor: ' + e.message };
   }
 }
