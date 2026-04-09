@@ -31,7 +31,7 @@ function doGet(e) {
 
   try {
     if (action === 'getCitas') result = getCitas();
-    if (action === 'getCitasPublicas') result = getCitasPublicas();
+    else if (action === 'getCitasPublicas') result = getCitasPublicas();
     else if (action === 'getUsuarios') result = getUsuarios(p);
     else if (action === 'getPendientes') result = getPendientes(p);
     else if (action === 'getEstadisticas') result = getEstadisticas(p);
