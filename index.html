@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sintropía Social — Repositorio Bibliográfico</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <script src="https://www.paypal.com/sdk/js?client-id=BAADNWafE2xUH09mKvDiejlkmXxK9XQx1oa-ujzF7TF-pQNLf1a58OhHRUMUNoDx9dgXzhDclHdQhukdW0&currency=MXN&disable-funding=venmo"></script>
+  <script src="https://www.paypal.com/sdk/js?client-id=AeQMZbOYXQsYdzl5qFzSjN3iBJlHoSbpD5RRsnzsssArO5nZRm_TwkVzxCTP5x8E2-EfPLOaPO4CEykz&currency=MXN&vault=true&intent=subscription&disable-funding=venmo"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     :root {
@@ -1064,23 +1064,73 @@
     // Subscription Modal
     function openSubscriptionModal() {
       document.getElementById('subscription-modal').classList.add('active');
-      // Render PayPal subscription button
-      if (!document.querySelector('#paypal-container-DEV3WDLVZ35HJ iframe')) {
-        paypal.HostedButtons({
-          hostedButtonId: "DEV3WDLVZ35HJ",
-          onApprove: function(data) {
-            // Mark user as subscriber
-            var user = Auth.getUser();
-            if (user) {
-              user.suscripcionActiva = true;
-              user.suscripcionId = data.subscriptionID || data.orderID;
-              Auth.setUser(user);
-            }
-            alert('¡Suscripción activada! Ahora puedes descargar citas ilimitadas.');
-            closeSubscriptionModal();
-          }
-        }).render("#paypal-container-DEV3WDLVZ35HJ");
+      
+      // Render PayPal subscription button (only once)
+      var container = document.getElementById('paypal-container-DEV3WDLVZ35HJ');
+      if (!container) {
+        console.error('Contenedor de suscripción no encontrado');
+        return;
       }
+      
+      // Check if already rendered
+      if (container.querySelector('iframe')) {
+        console.log('Botón de suscripción ya renderizado');
+        return;
+      }
+      
+      if (typeof paypal === 'undefined' || !paypal.Buttons) {
+        console.error('PayPal SDK no disponible');
+        alert('Error: PayPal no está disponible. Por favor recarga la página.');
+        return;
+      }
+      
+      console.log('Renderizando botón de suscripción...');
+      
+      paypal.Buttons({
+        style: {
+          layout: 'vertical',
+          color: 'gold',
+          shape: 'rect',
+          label: 'subscribe'
+        },
+        createSubscription: function(data, actions) {
+          console.log('Creando suscripción PayPal...');
+          return actions.subscription.create({
+            plan_id: 'P-13W394791J5202216NHMATUQ'
+          });
+        },
+        onApprove: function(data, actions) {
+          console.log('✓ Suscripción aprobada:', data);
+          console.log('Subscription ID:', data.subscriptionID);
+          
+          // Mark user as subscriber
+          var user = Auth.getUser();
+          if (user) {
+            user.suscripcionActiva = true;
+            user.suscripcionId = data.subscriptionID;
+            Auth.setUser(user);
+          } else {
+            // Usuario invitado - guardar en localStorage
+            localStorage.setItem('ss_subscription', JSON.stringify({
+              active: true,
+              subscriptionId: data.subscriptionID,
+              date: new Date().toISOString()
+            }));
+          }
+          
+          alert('¡Suscripción activada!\n\nSubscription ID: ' + data.subscriptionID + '\n\nAhora puedes descargar citas ilimitadas.');
+          closeSubscriptionModal();
+        },
+        onError: function(err) {
+          console.error('Error de suscripción:', err);
+          alert('Hubo un error al procesar la suscripción. Por favor intenta nuevamente.');
+        },
+        onCancel: function(data) {
+          console.log('Suscripción cancelada por el usuario');
+        }
+      }).render('#paypal-container-DEV3WDLVZ35HJ');
+      
+      console.log('✓ Botón de suscripción renderizado');
     }
 
     function closeSubscriptionModal() {

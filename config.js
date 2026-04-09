@@ -4,12 +4,12 @@
 
 var CONFIG = {
   API_URL: 'https://script.google.com/macros/s/AKfycbzde2DznpNvoQYTjTH7aiNbDRrJyEskNrnGu1foPqWc9KQNpbMiUaBMYpLMCNpZMCiY7A/exec',
+  SHEET_ID: '114sl6Mt-UhQQsv7zyicAAmsYzo3VDPoAvbT-0MakK94',
   GUEST_PERCENT: 0.10,
   CONTACT_EMAIL: 'contacto@sintropiasocial.com',
   ADMIN_EMAILS: ['dsalgado@sintropiasocial.com'],
-  PAYPAL_CLIENT_ID: 'BAADNWafE2xUH09mKvDiejlkmXxK9XQx1oa-ujzF7TF-pQNLf1a58OhHRUMUNoDx9dgXzhDclHdQhukdW0',
-  PAYPAL_BUTTON_ID: 'RY5K7VHYRPJLY',
-  PAYPAL_SUBSCRIPTION_ID: '' // Aquí pondrás tu Plan ID de suscripción mensual
+  PAYPAL_CLIENT_ID: 'AeQMZbOYXQsYdzl5qFzSjN3iBJlHoSbpD5RRsnzsssArO5nZRm_TwkVzxCTP5x8E2-EfPLOaPO4CEykz',
+  PAYPAL_SUBSCRIPTION_PLAN_ID: 'P-13W394791J5202216NHMATUQ'
 };
 
 // ── Auth helpers ──
