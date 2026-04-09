@@ -22,6 +22,7 @@ function doGet(e) {
 
   try {
     if (action === 'getCitas') result = getCitas();
+    if (action === 'getCitasPublicas') result = getCitasPublicas();
     else if (action === 'getUsuarios') result = getUsuarios(p);
     else if (action === 'getPendientes') result = getPendientes(p);
     else if (action === 'getEstadisticas') result = getEstadisticas(p);
@@ -70,6 +71,12 @@ function getCitas() {
     }
   }
   return { ok: true, data: rows };
+}
+
+function getCitasPublicas() {
+  // Devuelve todas las citas para usuarios públicos (invitados)
+  // Es la misma función que getCitas pero con otro nombre para mayor claridad
+  return getCitas();
 }
 
 function loginAdmin(p) {
