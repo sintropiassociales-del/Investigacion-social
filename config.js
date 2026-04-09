@@ -3,7 +3,9 @@
 // ============================================================
 
 var CONFIG = {
-  API_URL: 'https://script.google.com/macros/library/d/1P5lSRplTRZiY3MQMAPqQ6xl_hGKd28f4MGOWWv5rHIDP9VeVHXgiKyqi/11',
+  // URL de tu Google Apps Script Web App
+  API_URL: 'https://script.google.com/macros/s/AKfycbxKu050M7mSoN9H4SokLmD8DWCCGk0EMWGih-Qxjam2BV0jazKWyQEMkO7hPvC3HjFlMg/exec',
+  
   SHEET_ID: '114sl6Mt-UhQQsv7zyicAAmsYzo3VDPoAvbT-0MakK94',
   GUEST_PERCENT: 0.10,
   CONTACT_EMAIL: 'contacto@sintropiasocial.com',

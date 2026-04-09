@@ -16,6 +16,15 @@ function makeResponse(data) {
 }
 
 function doGet(e) {
+  // Si no hay parámetros, devolver info básica
+  if (!e || !e.parameter) {
+    return makeResponse({ 
+      ok: true, 
+      message: 'API de Sintropía Social funcionando',
+      version: '2.0'
+    });
+  }
+  
   var p = e.parameter;
   var action = p.action || '';
   var result;
@@ -49,6 +58,11 @@ function doGet(e) {
   }
 
   return makeResponse(result);
+}
+
+// Handler para peticiones OPTIONS (CORS preflight)
+function doOptions(e) {
+  return makeResponse({ ok: true, message: 'CORS OK' });
 }
 
 function getCitas() {
