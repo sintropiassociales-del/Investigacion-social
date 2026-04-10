@@ -4,7 +4,7 @@
 
 var CONFIG = {
   // URL de tu Google Apps Script Web App
-  API_URL: 'https://script.google.com/macros/s/AKfycbxKu050M7mSoN9H4SokLmD8DWCCGk0EMWGih-Qxjam2BV0jazKWyQEMkO7hPvC3HjFlMg/exec',
+  API_URL: 'https://script.google.com/macros/s/AKfycbwuXDWbqjGM_R_QCVJ7uysAuuNIRyA2WuX1OZ0wkv8nDpr4_qPcaFt9ue_AWvh3MwUvkA/exec',
   
   SHEET_ID: '114sl6Mt-UhQQsv7zyicAAmsYzo3VDPoAvbT-0MakK94',
   GUEST_PERCENT: 0.10,
